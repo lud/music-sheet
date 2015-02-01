@@ -8,6 +8,7 @@
 	console.warn('react non-minified version')
 </script>
 <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+<script src="./node_modules/bencode-js/bencode-min.js"></script>
 
 
 <style type="text/css">
@@ -302,7 +303,12 @@
 
 
 	function serializeTrack(track) {
-		return JSON.stringify(track)
+		/*
+			Ici, transformer la track en de simple objets (pas des new XXX)
+			avec des noms de propriétés raccourcis et en précisant la classe,
+			genre myObject._c = 'Step'
+		*/
+		return Bencode.encode(track)
 	}
 
 </script>
