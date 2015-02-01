@@ -19,13 +19,15 @@
 		/*border:1px solid blue;*/
 	}
 	.sheet-row {
-		/*border:1px solid lightblue;*/
-		line-height:90px;
+		line-height:110px;
 		margin-top:20px;
 		padding-bottom:20px;
 		border-bottom:1px solid #aaa;
 	}
-	.sheet-elem {
+	.sheet-row:last-child {
+		border:none;
+	}
+	.sheet-bar-separator, .sheet-signature, .sheet-bar {
 		display:inline-block;
 		vertical-align:middle;
 		line-height:20px;
@@ -38,6 +40,8 @@
 		width:124px;
 		height:90px;
 		box-sizing:border-box;
+	}
+	.sheet-bar  + .sheet-bar {
 	}
 	.sheet-bar.bad-bar {
 		color:red;
@@ -66,6 +70,9 @@
 		text-align:center;
 		font-size: 1.4em;
 		width:35px;
+	}
+	.sheet-signature:first-child {
+		margin-left: -35px;
 	}
 	.sheet-bar-sep {
 		border-left:2px solid #666;
@@ -122,7 +129,7 @@
 	})
 	var Sheet = React.createClass({
 		render: function() {
-			var rows = stepsToRows(this.props.steps,this.props.rowLen)
+			var rows = this.props.rows
 			var htmlRows = rows.map(function(row) {
 				return (
 					<HtmlRow row={row}/>
@@ -141,7 +148,7 @@
 				if (e instanceof Bar)
 					return (<HtmlBar bar={e}/>)
 				else if (e instanceof BarSeparator)
-					return (<div className="sheet-elem sheet-bar-sep"></div>)
+					return (<div className="sheet-bar-separator sheet-bar-sep"></div>)
 				else if (e instanceof Signature)
 					return (<HtmlSignature signature={e}/>)
 			})
@@ -155,21 +162,20 @@
 	var HtmlBar = React.createClass({
 		render: function() {
 			var startAt = 0
-			var htmlSteps = this.props.bar.content.map(function(step) {
-				var html = (<HtmlStep startAt={startAt} step={step}/>)
+			var htmlPoss = this.props.bar.content.map(function(step) {
+				var html = (<HtmlPos startAt={startAt} step={step}/>)
 				startAt += step.beats
 				return html
 			})
 			return (
 				<div className={this.getClassName()}>
-					{htmlSteps}
+					{htmlPoss}
 				</div>
 			)
 		},
 		getClassName: function() {
 			var classes = [
 				'sheet-bar',
-				'sheet-elem',
 				'bar-'+this.props.bar.signature.beats
 			]
 			if (this.props.bar.beatsToAdd !== 0) {
@@ -180,7 +186,7 @@
 			return classes.join(' ')
 		}
 	})
-	var HtmlStep = React.createClass({
+	var HtmlPos = React.createClass({
 		render: function() {
 			return (
 				<div className={this.getClassName()}>
@@ -200,7 +206,7 @@
 		render: function() {
 			var s = this.props.signature
 			return (
-				<div className="sheet-signature sheet-elem">
+				<div className="sheet-signature">
 				{s.beats}
 					<br/>
 				{s.size}
@@ -218,7 +224,7 @@
 
 	// -- DataTypes -------------------------------------------------------
 
-	function Step(chord,beats) {
+	function Pos(chord,beats) {
 		this.chord = chord
 		this.beats = beats || 1
 	}
@@ -231,7 +237,7 @@
 		this.beatsToAdd = signature.beats
 		this.signature = signature
 	}
-	Bar.prototype.addStep = function(step) {
+	Bar.prototype.addPos = function(step) {
 		this.beatsToAdd -= step.beats
 		this.content.push(step)
 	}
@@ -243,74 +249,96 @@
 	// RepeatLeft.prototype = new BarSeparator
 	// RepeatRight.prototype = new BarSeparator
 
-	function stepsToRows (steps,rowLen) {
-		// ici on va créer les mesures en groupand chaque step jusqu'à ce
+	/**
+	 * Transforms a raw list of steps into Bar's (groups of Pos's). The other
+	 * types of step are not changed
+	 * @param  {Array}
+	 * @return {Array}
+	 */
+	function stepsToSongList(steps) {
+		// ici on va créer les mesures en groupand chaque Pos jusqu'à ce
 		// que la somme de leurs beats soit égale au beats de la signature
 		// courante
-		// Ensuite, on va grouper les bars en rows par groupe de
-		// taille=this.rowLen
-		// Quand on rencontre une information de mesure (signature, début de
-		// répétition, coda), on crée automatiquement une nouvelle Bar
-		// Quand on rencontre un RowEnd
 		if (!steps.length) return []
+		// On regarde si notre morceau commence par une signature. Si ce n'est
+		// pas le cas on ajoute la signature par défaut
 		var startSignature = (steps[0] instanceof Signature
 								? steps.shift()
 								: new Signature)
+		// On commence à boucler sur tous nos steps. On retient la Signature
+		// courante pour l'associer à chaque Bar
 		var currentSig = startSignature
 		var currentBar = new Bar([],currentSig)
-		var bars = [currentSig,currentBar]
-		steps.forEach(function(step) {
-			if (step instanceof Step) {
+		var list = [currentSig,currentBar]
+		steps.forEach(function(step){
+			if (step instanceof Pos) {
 				if (step.beats > currentSig.beats) {
-					throw new Error("Step larger thant what signature allows")
+					throw new Error("Pos larger thant what bar signature allows",step,currentBar)
 				}
+				// si la Bar est complète (ou que la Pos ne rentre pas) on crée
+				// une nouvelle Bar
 				if (step.beats > currentBar.beatsToAdd) {
 					currentBar = new Bar([],currentSig)
-					bars.push(currentBar)
+					list.push(currentBar)
 				}
-				currentBar.addStep(step)
-			}
-			// si c'est un rowjump on le gère plus tard, on le stack avec les
-			// bars. On doit par contre fermer la mesure courante
-			else if (step instanceof RowJump) {
-				currentBar = new Bar([],currentSig)
-				bars.push(step)
-				bars.push(currentBar)
+				// Enfin on ajoute la Pos à la Bar
+				currentBar.addPos(step)
 			}
 			// quand on change de signature, on crée une nouvelle bar
-			// automatiquement
+			// automatiquement. La Signature est directement stockée dans la
+			// liste renvoyée. De plus, elle devient la nouvelle currentSig
 			else if (step instanceof Signature) {
-				bars.push(step) // on met la signature dans la row directement
 				currentSig = step
 				currentBar = new Bar([],currentSig)
-				bars.push(currentBar)
+				list.push(step)
+				list.push(currentBar)
+			}
+			// Sinon c'est autre chose, un RowJump, une Coda ou autre, on le met
+			// simplement dans la liste
+			else {
+				list.push(step)
 			}
 		})
-		l('bars',bars)
-		var row = [new BarSeparator]
-		var rows = [row]
-		var currentLen = rowLen
-		bars.forEach(function(bar) {
-			if (currentLen === 0 || bar instanceof RowJump) {
-				row = [new BarSeparator]
-				rows.push(row)
-				currentLen = rowLen
-				if (bar instanceof RowJump) {
-					return
-				}
+		return list
+
+	}
+
+	/**
+	 * Prend une songlist (cf stepsToSongList) et renvoie les objets groupés
+	 * en Row's
+	 * @param  {Array}
+	 * @return {Array}
+	 */
+	function songListToRows (list) {
+		if (!list.length) return []
+
+		var currentRow = []
+		var rows = [currentRow]
+		list.forEach(function(item){
+			l('item',DEBUG_getItemClass(item))
+			// avant une Bar on met un BarSeparator
+			if (item instanceof Bar) {
+				currentRow.push(new BarSeparator)
 			}
-			row.push(bar)
-			if (bar instanceof Bar) {
+			// Si on a un rowjump, on change de row.
+			if (item instanceof RowJump) {
+				currentRow = []
+				rows.push(currentRow)
+			}
+			// Si pas un RowJump, (Bar compris), on push l'item
+			else {
+				currentRow.push(item)
+			}
+		})
+		// Enfin, on revoit now rows
+		// Si l'une se finit par une Bar, on ajoute un BarSeparator
+		rows.forEach(function(row){
+			if (row[row.length-1] instanceof Bar) {
 				row.push(new BarSeparator)
-				currentLen -= 1
+			} else {
+				l('last item',row[row.length-1])
 			}
 		})
-		if (!(rows[0][1] instanceof Signature)) {
-			l("rows[0][1]",rows[0][1])
-			var firstSeparator = row[0].shift()
-			rows[0].unshift(new Signature)
-			rows[0].unshift(firstSeparator)
-		}
 		l('rows',rows)
 		return rows
 	}
@@ -318,91 +346,78 @@
 
 	var l = console.log.bind(console)
 
+	function DEBUG_getItemClass(item) {
+		switch(true) {
+			case item instanceof Bar:         	return 'Bar'
+			case item instanceof BarSeparator:	return 'BarSeparator'
+			case item instanceof Pos:         	return 'Pos'
+			case item instanceof RowJump:     	return 'RowJump'
+			case item instanceof Signature:   	return 'Signature'
+		}
+	}
+
+	function DEBUG_randomNote(item) {
+		// get the note
+		var noteNum = parseInt(Math.random() * 7)
+		var note = "ABCDEFG"[noteNum]
+		var alter = parseInt(Math.random() * 5)
+		if (alter === 1) note += '#'
+		else if (alter === 2) note += 'b'
+		// else no alter
+		// tierce
+		var minor = parseInt(Math.random() * 2)
+		if (minor) note += 'm'
+		// septieme
+		var sept = parseInt(Math.random() * 4)
+		if (sept === 1) note += '7'
+		else if (sept === 2) note += '7M'
+
+		return note
+	}
 
 	function serializeTrack(track) {
 		/*
 			Ici, transformer la track en de simple objets (pas des new XXX)
 			avec des noms de propriétés raccourcis et en précisant la classe,
-			genre myObject._c = 'Step'
+			genre myObject._c = 'Pos'
 		*/
+		return 'serialized ...'
 		return Bencode.encode(track)
 	}
+
+	// @todo sur l'IHM empêcher d'ajouter un RowJump en tout début de steps
 
 </script>
 
 <script type="text/jsx">
 	var track = {
-		title:"My Track",
-		rowLen:4, // 4 mesures par ligne
+		title:"Some Ol' Song",
 		steps: [
 
-			// ---
-			new Signature(3,4),
-			new Step('Em',3),
-			// ---
-			new Step('Am',1),
-			new Step('B7sus4',2),
-			// ---
-			new Step('D5',2),
-			new Step('C#',1),
-			// ---
-			new Step('Aa',1),
-			new Step('Aa',1),
-			new Step('Aa',1),
-			// ---
-			new Step('Em',3),
-			// ---
-			new Signature(4,4),
-			// ---
-			new Step('F#',2),
-			new Step('B7',2),
-			// ---
-			new Step('EmM7dim.',3),
-			new Step('Em',1),
-			// ---
-			new Step('F#',1),
-			new Step('B7',1),
-			new Step('Em',2),
-			// ---
-			new Step('Em',2),
-			new Step('F#',1),
-			new Step('B7',1),
-			// ---
-			new Step('Em',1),
-			new Step('Em',1),
-			new Step('F#',1),
-			new Step('B7',1),
-			// ---
-			new Step('Em',4),
-			// ---
-			new Step('XX',1),
-			new Step('YY',2),
-			new Step('ZZ',1),
-			// ---
-			new Step('F#',1),
-			new Step('B7',1),
-			new Step('Em',2),
 			// Blues
+			new Pos('I',4),
+			new Pos('I',4),
+			new Pos('I',4),
+			new Pos('I',4),
 			new RowJump(),
-			new Step('I',4),
-			new Step('I',4),
-			new Step('I',4),
-			new Step('I',4),
-			new Step('IV',4),
-			new Step('IV',4),
-			new Step('I',4),
-			new Step('I',4),
-			new Step('V',4),
-			new Step('IV',4),
-			new Step('I',4),
-			new Step('I',4)
+			new Pos('IV',4),
+			new Pos('IV',4),
+			new Pos('I',4),
+			new Pos('I',4),
+			new RowJump(),
+			new Pos('V',4),
+			new Pos('IV',4),
+			new Pos('I',4),
+			new Pos('I',4)
 		]
 	}
-
+	var rows = songListToRows(stepsToSongList(track.steps))
+	l('rows',rows)
 	React.render(
-		<Paper {...track}/>,
+		<Paper rows={rows} title={track.title}/>,
 		document.getElementById('paper-wrapper')
 	)
+
 
 	console.log('Track',serializeTrack(track))
 
