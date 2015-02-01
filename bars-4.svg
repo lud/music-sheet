@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="862.52405"
+   height="89.646286"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="bars-4.svg"
+   inkscape:export-filename="/home/niahoo/Bureau/bars-4.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path4528"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path4525"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.6203867"
+     inkscape:cx="805.15718"
+     inkscape:cy="22.387915"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1366"
+     inkscape:window-height="716"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(628.62817,-153.79402)">
+    <rect
+       style="fill:none;stroke:none"
+       id="rect2985-5"
+       width="119.64629"
+       height="89.646286"
+       x="-628.62817"
+       y="153.79402" />
+    <path
+       style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -626.77662,155.80406 55.24272,40.32718"
+       id="path3888"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -626.77662,241.43027 55.24272,-40.32718"
+       id="path3888-3"
+       inkscape:connector-curvature="0" />
+    <g
+       id="g5556"
+       inkscape:export-filename="/home/niahoo/Bureau/bar-4.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       style="fill:none">
+      <rect
+         y="153.79402"
+         x="-503.98187"
+         height="89.646286"
+         width="119.64629"
+         id="rect2985-5-9"
+         style="fill:none;stroke:none" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path3888-3-0"
+         d="m -502.05351,241.63232 115.78959,-86.03031"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g5541"
+       inkscape:export-filename="/home/niahoo/Bureau/bar-4.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       style="fill:none">
+      <rect
+         y="153.79402"
+         x="-130.04298"
+         height="89.646286"
+         width="119.64629"
+         id="rect2985-5-9-6"
+         style="fill:none;stroke:none" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path3888-3-0-7"
+         d="M -128.32953,241.43027 -12.53994,155.39996"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3888-1"
+         d="m -68.15369,201.10983 55.24272,40.32718"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g5546"
+       inkscape:export-filename="/home/niahoo/Bureau/bar-4.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       style="fill:none">
+      <rect
+         y="153.79402"
+         x="-254.68929"
+         height="89.646286"
+         width="119.64629"
+         id="rect2985-5-9-2"
+         style="fill:none;stroke:none" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path3888-3-0-2"
+         d="m -252.76092,241.63232 115.78959,-86.03031"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3888-39"
+         d="m -252.87098,156.08028 55.24272,40.32718"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g5551"
+       inkscape:export-filename="/home/niahoo/Bureau/bar-4.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       style="fill:none">
+      <rect
+         y="153.79402"
+         x="-379.33557"
+         height="89.646286"
+         width="119.64629"
+         id="rect2985-5-2"
+         style="fill:none;stroke:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3888-32"
+         d="m -317.18966,201.10982 55.24272,40.32718"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3888-3-4"
+         d="m -377.62213,241.437 55.24272,-40.32718"
+         style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g5597">
+      <g
+         style="fill:none"
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/niahoo/Bureau/bar-4.png"
+         id="g5535">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2985-5-9-2-1"
+           width="119.64629"
+           height="89.646286"
+           x="-5.3966894"
+           y="153.79402" />
+        <path
+           style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="M -3.46833,241.63232 112.32126,155.60201"
+           id="path3888-3-0-2-5"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m -3.57839,156.08028 55.24272,40.32718"
+           id="path3888-39-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 57.24965,200.7192 55.24272,40.32718"
+           id="path3888-39-2-4"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <rect
+       style="fill:none;stroke:none"
+       id="rect2985-5-9-2-1-4"
+       width="119.64629"
+       height="89.646286"
+       x="114.2496"
+       y="153.79402" />
+    <path
+       style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 116.0679,156.08028 55.24272,40.32718"
+       id="path3888-39-2-7"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 176.89594,200.7192 55.24272,40.32718"
+       id="path3888-39-2-4-3"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#6d6d6d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 116.04366,241.04638 171.28638,200.7192"
+       id="path3888-3-9"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

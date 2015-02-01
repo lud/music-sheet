@@ -1,0 +1,370 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Music Sheet</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<script src="http://fb.me/react-0.12.2.js"></script>
+<script>
+	console.warn('react non-minified version')
+</script>
+<script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+
+
+<style type="text/css">
+	@import url(http://fonts.googleapis.com/css?family=Asul:400,700);
+	#paper-wrapper {
+	}
+	.sheet {
+		/*border:1px solid blue;*/
+	}
+	.sheet-row {
+		/*border:1px solid lightblue;*/
+		line-height:90px;
+		margin-top:20px;
+		padding-bottom:20px;
+		border-bottom:1px solid #aaa;
+	}
+	.sheet-elem {
+		display:inline-block;
+		vertical-align:middle;
+		line-height:20px;
+		font-family:'Asul', sans-serif;
+		color:#414141;
+		font-weight:700;
+	}
+	.sheet-bar {
+		position:relative;
+		width:124px;
+		height:90px;
+		box-sizing:border-box;
+	}
+	.sheet-bar.bad-bar {
+		color:red;
+		background-position-Y:50%;
+	}
+	.sheet-bar.bar-4 {
+		background-image:url(bar-4.png);
+	}
+	.sheet-bar.bar-4.b_4      	{ background-image:none; }
+	.sheet-bar.bar-4.b_1-3    	{ background-position-x:0; }
+	.sheet-bar.bar-4.b_2-2    	{ background-position-x:-124px; }
+	.sheet-bar.bar-4.b_3-1    	{ background-position-x:-248px; }
+	.sheet-bar.bar-4.b_1-1-2  	{ background-position-x:-372px; }
+	.sheet-bar.bar-4.b_2-1-1  	{ background-position-x:-496px; }
+	.sheet-bar.bar-4.b_1-1-1-1	{ background-position-x:-620px; }
+	.sheet-bar.bar-4.b_1-2-1  	{ background-position-x:-744px; }
+
+	.sheet-signature {
+		text-align:center;
+		font-size: 1.4em;
+		width:35px;
+	}
+	.sheet-bar-sep {
+		border-left:2px solid #666;
+		height: 30px;
+		margin:0 20px;
+	}
+
+	.sheet-step {
+		font-size: 18px;
+		position:absolute;
+		width:100%;
+		padding:0 5px;
+	}
+	/* positionement des steps dans une bar 4 */
+	.bar-4 .sheet-step.s_0-1 {top:33px;text-align:left;}
+	.bar-4 .sheet-step.s_0-2 {top:20px;text-align:left; padding:0 15px;}
+	.bar-4 .sheet-step.s_0-3 {top:14px;text-align:center;}
+	.bar-4 .sheet-step.s_0-4 {top:32px;text-align:center;}
+	.bar-4 .sheet-step.s_1-1 {text-align:center; padding:5px;}
+	.bar-4 .sheet-step.s_1-2 {top:20px;text-align:right; padding:0 15px; }
+	.bar-4 .sheet-step.s_1-3 {top:33px;text-align:right; padding:0 15px;}
+	.bar-4 .sheet-step.s_2-1 {top:33px;text-align:right;}
+	.bar-4 .sheet-step.s_2-2 {top:52px;text-align:right; padding:0 15px;}
+	.bar-4 .sheet-step.s_3-1 {top:62px;text-align:center;}
+
+
+</style>
+
+<div id="paper-wrapper" class="container">
+
+</div>
+
+<script type="text/jsx">
+
+	var DEFAULT_SIGNATURE_BEATS = 4
+	var DEFAULT_SIGNATURE_SIZE = 4
+
+	var Paper = React.createClass({
+		render: function() {
+			return (
+				<div>
+					<h1>{this.props.title}</h1>
+					<Sheet {...this.props}/>
+				</div>
+			)
+		}
+	})
+	var Sheet = React.createClass({
+		render: function() {
+			var rows = stepsToRows(this.props.steps,this.props.rowLen)
+			var htmlRows = rows.map(function(row) {
+				return (
+					<HtmlRow row={row}/>
+				)
+			})
+			return (
+				<div className="sheet">
+					{htmlRows}
+				</div>
+			)
+		}
+	})
+	var HtmlRow = React.createClass({
+		render: function() {
+			var htmlBars = this.props.row.map(function(e) {
+				if (e instanceof Bar)
+					return (<HtmlBar bar={e}/>)
+				else if (e instanceof BarSeparator)
+					return (<div className="sheet-elem sheet-bar-sep"></div>)
+				else if (e instanceof Signature)
+					return (<HtmlSignature signature={e}/>)
+			})
+			return (
+				<div className="sheet-row">
+					{htmlBars}
+				</div>
+			)
+		}
+	})
+	var HtmlBar = React.createClass({
+		render: function() {
+			var startAt = 0
+			var htmlSteps = this.props.bar.content.map(function(step) {
+				var html = (<HtmlStep startAt={startAt} step={step}/>)
+				startAt += step.beats
+				return html
+			})
+			return (
+				<div className={this.getClassName()}>
+					{htmlSteps}
+				</div>
+			)
+		},
+		getClassName: function() {
+			var classes = [
+				'sheet-bar',
+				'sheet-elem',
+				'bar-'+this.props.bar.signature.beats
+			]
+			if (this.props.bar.beatsToAdd !== 0) {
+				// la mesure est incomplète ou trop grande
+				classes.push('bad-bar')
+			}
+			classes.push('b_' + this.props.bar.content.map(get('beats')).join('-'))
+			return classes.join(' ')
+		}
+	})
+	var HtmlStep = React.createClass({
+		render: function() {
+			return (
+				<div className={this.getClassName()}>
+					{this.props.step.chord}
+				</div>
+			)
+		},
+		getClassName: function() {
+			var classes = [
+				'sheet-step',
+				's_'+[this.props.startAt,this.props.step.beats].join('-')
+			]
+			return classes.join(' ')
+		}
+	})
+	var HtmlSignature = React.createClass({
+		render: function() {
+			var s = this.props.signature
+			return (
+				<div className="sheet-signature sheet-elem">
+				{s.beats}
+					<br/>
+				&mdash;
+					<br/>
+				{s.size}
+				</div>
+			)
+		}
+	})
+</script>
+<script>
+
+	function get(k) {
+		return function (o) { return o[k] }
+	}
+
+
+	// -- DataTypes -------------------------------------------------------
+
+	function Step(chord,beats) {
+		this.chord = chord
+		this.beats = beats || 1
+	}
+	function Signature(beats,size) {
+		this.beats = beats || DEFAULT_SIGNATURE_BEATS
+		this.size = size || DEFAULT_SIGNATURE_SIZE
+	}
+	function Bar(content,signature) {
+		this.content = content
+		this.beatsToAdd = signature.beats
+		this.signature = signature
+	}
+	Bar.prototype.addStep = function(step) {
+		this.beatsToAdd -= step.beats
+		this.content.push(step)
+	}
+
+	function RowJump(){}
+	function BarSeparator(){}
+	// function RepeatLeft(){}
+	// function RepeatRight(){}
+	// RepeatLeft.prototype = new BarSeparator
+	// RepeatRight.prototype = new BarSeparator
+
+	function stepsToRows (steps,rowLen) {
+		// ici on va créer les mesures en groupand chaque step jusqu'à ce
+		// que la somme de leurs beats soit égale au beats de la signature
+		// courante
+		// Ensuite, on va grouper les bars en rows par groupe de
+		// taille=this.rowLen
+		// Quand on rencontre une information de mesure (signature, début de
+		// répétition, coda), on crée automatiquement une nouvelle Bar
+		// Quand on rencontre un RowEnd
+		if (!steps.length) return []
+		var startSignature = (steps[0] instanceof Signature
+								? steps.shift()
+								: new Signature)
+		var currentSig = startSignature
+		var bars = [new Bar([],currentSig)]
+		var currentBar = bars[0]
+		steps.forEach(function(step) {
+			if (step instanceof Step) {
+				if (step.beats > currentSig.beats) {
+					throw new Error("Step larger thant what signature allows")
+				}
+				if (step.beats > currentBar.beatsToAdd) {
+					currentBar = new Bar([],currentSig)
+					bars.push(currentBar)
+				}
+				currentBar.addStep(step)
+			}
+			// si c'est un rowjump on le gère plus tard, on le stack avec les
+			// bars. On doit par contre fermer la mesure courante
+			else if (step instanceof RowJump) {
+				currentBar = new Bar([],currentSig)
+				bars.push(step)
+				bars.push(currentBar)
+			}
+			// quand on change de signature, on crée une nouvelle bar
+			// automatiquement
+			else if (step instanceof Signature) {
+				bars.push(step) // on met la signature dans la row directement
+				currentSig = step
+				currentBar = new Bar([],currentSig)
+				bars.push(currentBar)
+			}
+		})
+		var row = [new BarSeparator]
+		var rows = [row]
+		var currentLen = rowLen
+		bars.forEach(function(bar) {
+			if (currentLen === 0 || bar instanceof RowJump) {
+				row = [new BarSeparator]
+				rows.push(row)
+				currentLen = rowLen
+				if (bar instanceof RowJump) {
+					return
+				}
+			}
+			row.push(bar)
+			if (bar instanceof Bar) {
+				row.push(new BarSeparator)
+				currentLen -= 1
+			}
+		})
+		if (!(rows[0][0] instanceof Signature)) {
+			rows[0].unshift(new Signature)
+		}
+		return rows
+	}
+
+
+	var l = console.log.bind(console)
+
+
+	function serializeTrack(track) {
+		return JSON.stringify(track)
+	}
+
+</script>
+
+<script type="text/jsx">
+	var track = {
+		title:"My Track",
+		rowLen:4, // 4 mesures par ligne
+		steps: [
+			new Step('Em',1),
+			new Step('Em',3),
+			// ---
+			new Step('F#',2),
+			new Step('B7',2),
+			// ---
+			new Step('Em7ad',3),
+			new Step('Em',1),
+			// ---
+			new Step('F#',1),
+			new Step('B7',1),
+			new Step('Em',2),
+			// ---
+			new Step('Em',2),
+			new Step('F#',1),
+			new Step('B7',1),
+			// ---
+			new Step('Em',1),
+			new Step('Em',1),
+			new Step('F#',1),
+			new Step('B7',1),
+			// ---
+			new Step('Em',4),
+			// ---
+			new Step('XX',1),
+			new Step('YY',2),
+			new Step('ZZ',1),
+			// ---
+			new Step('F#',1),
+			new Step('B7',1),
+			new Step('Em',2),
+			// Blues
+			new RowJump(),
+			new Step('I',4),
+			new Step('I',4),
+			new Step('I',4),
+			new Step('I',4),
+			new Step('IV',4),
+			new Step('IV',4),
+			new Step('I',4),
+			new Step('I',4),
+			new Step('V',4),
+			new Step('IV',4),
+			new Step('I',4),
+			new Step('I',4)
+		]
+	}
+
+	React.render(
+		<Paper {...track}/>,
+		document.getElementById('paper-wrapper')
+	)
+
+	console.log('Track',serializeTrack(track))
+
+</script>
