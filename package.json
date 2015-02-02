@@ -1,0 +1,36 @@
+{
+  "name": "songplan",
+  "version": "0.1.0",
+  "description": "A simple tool to write song plans",
+  "main": "songplan.js",
+  "dependencies": {
+    "base64-url": "^1.2.0",
+    "bencode-js": "0.0.7",
+    "react": "^0.12.0-rc1",
+    "react-addons": "^0.9.0"
+  },
+  "devDependencies": {
+    "browserify": "^6.1.0",
+    "path": "^0.4.9",
+    "browserify-shim": "^3.8.0",
+    "envify": "^3.0.0",
+    "gulp": "^3.8.9",
+    "gulp-rename": "^1.2.0",
+    "reactify": "latest",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lud/music-sheet.git"
+  },
+  "author": "ludovic demblans <ludovic@demblans.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lud/music-sheet/issues"
+  },
+  "homepage": "https://github.com/lud/music-sheet"
+}
+
